@@ -15,6 +15,7 @@ class CityMapper @Inject constructor() : BaseMapper<List<CityDto>, List<CityMode
             country = cityDto.country.orEmpty(),
             longitude = cityDto.coord?.lon ?: 0.0,
             latitude = cityDto.coord?.lat ?: 0.0,
+            normalizedName = cityDto.name?.lowercase()?.trim().orEmpty(),
             flagEmoji = cityDto.country.orEmpty().toFlagEmoji()
         )
     }

@@ -7,4 +7,6 @@ data class CityModel(
     val latitude: Double,
     val longitude: Double,
     val flagEmoji: String,
+    val normalizedName: String? = null,
+    var nextCity: CityModel? = null,
 )
