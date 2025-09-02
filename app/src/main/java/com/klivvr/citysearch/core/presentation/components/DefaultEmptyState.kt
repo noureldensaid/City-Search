@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,7 +26,7 @@ import com.klivvr.citysearch.core.presentation.ui.theme.PrimaryBackground
 @Composable
 fun DefaultEmptyState(
     modifier: Modifier = Modifier,
-    body: String = "No matching results were found",
+    body: String = stringResource(R.string.no_matching_results_were_found),
     painter: Painter = painterResource(id = R.mipmap.ic_launcher_foreground),
 ) {
     Column(
