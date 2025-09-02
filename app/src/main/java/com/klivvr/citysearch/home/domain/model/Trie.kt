@@ -1,8 +1,5 @@
 package com.klivvr.citysearch.home.domain.model
 
-import kotlin.collections.getOrPut
-import kotlin.collections.sortedWith
-
 class Trie {
     /**
      * Internal class representing a node in the Trie structure.
