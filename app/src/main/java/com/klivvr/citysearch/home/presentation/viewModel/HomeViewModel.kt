@@ -1,6 +1,5 @@
 package com.klivvr.citysearch.home.presentation.viewModel
 
-import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -29,10 +28,13 @@ class HomeViewModel @Inject constructor(
     var state = MutableStateFlow(HomeScreenState())
         private set
 
-    private val _mapChannel = Channel<Uri>(capacity = Channel.BUFFERED)
-    val mapChannel = _mapChannel.receiveAsFlow()
+    private val _eventChannel =
+        Channel<HomeScreenEvent.HomeScreenUiEvent>(capacity = Channel.BUFFERED)
+    val eventChannel = _eventChannel.receiveAsFlow()
+
 
     init {
+        state.update { it.copy(searchQuery = savedStateHandle[SEARCH_QUERY_KEY] ?: "") }
         onEvent(HomeScreenEvent.LoadCities)
     }
 
@@ -47,19 +49,25 @@ class HomeViewModel @Inject constructor(
     private fun loadCities() {
         viewModelScope.launch {
             state.update { it.copy(isLoading = true) }
-            val cities = getCitiesUseCase()
-            state.update {
-                it.copy(
-                    citiesCount = cities.size,
-                    isLoading = false,
-                    data = cities.toPersistentList()
-                )
+            try {
+                val cities = getCitiesUseCase()
+                state.update {
+                    it.copy(
+                        citiesCount = cities.size,
+                        data = cities.toPersistentList()
+                    )
+                }
+            } catch (e: Exception) {
+                _eventChannel.send(HomeScreenEvent.HomeScreenUiEvent.ShowError(e.message))
+            } finally {
+                state.update { it.copy(isLoading = false) }
             }
         }
     }
 
     private fun searchCities(query: String) {
         viewModelScope.launch {
+            savedStateHandle[SEARCH_QUERY_KEY] = query
             state.update { it.copy(searchQuery = query) }
             val cities = searchCitiesUseCase(query)
             state.update { it.copy(data = cities.toPersistentList(), citiesCount = cities.size) }
@@ -67,9 +75,12 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun navigateToGoogleMaps(city: CityModel) {
-       viewModelScope.launch {
-           _mapChannel.send("geo:${city.latitude},${city.longitude}".toUri())
-       }
+        viewModelScope.launch {
+            _eventChannel.send(HomeScreenEvent.HomeScreenUiEvent.OpenMap("geo:${city.latitude},${city.longitude}".toUri()))
+        }
     }
 
+    companion object {
+        private const val SEARCH_QUERY_KEY = "search_query"
+    }
 }
