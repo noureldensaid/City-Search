@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -41,16 +43,23 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 fun HomeScreenRoot(
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState,
     state: HomeScreenState,
     onEvent: (HomeScreenEvent) -> Unit
 ) {
     Scaffold(
         modifier = modifier,
         containerColor = PrimaryBackground,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             Column {
                 TopAppBar(
-                    title = { Text(stringResource(R.string.app_name), fontWeight = FontWeight.Bold) },
+                    title = {
+                        Text(
+                            text = stringResource(R.string.app_name),
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
                     colors = TopAppBarDefaults.topAppBarColors(
                         containerColor = PrimaryBackground,
                         titleContentColor = PrimaryText
@@ -61,7 +70,10 @@ fun HomeScreenRoot(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 32.dp, bottom = 16.dp),
-                        text = stringResource(R.string.cities, state.citiesCount.toReadableString()),
+                        text = stringResource(
+                            R.string.cities,
+                            state.citiesCount.toReadableString()
+                        ),
                         textAlign = TextAlign.Center,
                         color = PrimaryText
                     )
@@ -111,10 +123,12 @@ fun HomeScreenRoot(
     }
 }
 
-@Preview
+@Preview(device = "spec:parent=pixel_8,orientation=portrait")
+@Preview(device = "spec:parent=pixel_8,orientation=landscape")
 @Composable
-private fun HomeScreenComponentPreview() {
+fun HomeScreenComponentPreview() {
     HomeScreenRoot(
+        snackbarHostState = SnackbarHostState(),
         state = HomeScreenState(
             isLoading = false,
             data = persistentListOf(

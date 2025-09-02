@@ -1,16 +1,19 @@
 package com.klivvr.citysearch.home.domain.useCase
 
+import com.klivvr.citysearch.core.utils.DispatcherProvider
 import com.klivvr.citysearch.home.domain.model.CityModel
 import com.klivvr.citysearch.home.domain.model.Trie
 import com.klivvr.citysearch.home.domain.repository.CityRepository
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class SearchCitiesUseCase @Inject constructor(
-    private val repo: CityRepository
+    private val repo: CityRepository,
+    private val dispatcherProvider: DispatcherProvider
 ) {
     @Volatile
     private var trie: Trie? = null
@@ -26,7 +29,9 @@ class SearchCitiesUseCase @Inject constructor(
         }
     }
 
-    suspend operator fun invoke(prefix: String): List<CityModel> =
+    suspend operator fun invoke(prefix: String): List<CityModel> = withContext(dispatcherProvider.default){
         getTrie().search(prefix.trim().lowercase())
+    }
+
 
 }

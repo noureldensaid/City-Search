@@ -20,8 +20,8 @@ fun DefaultLoadingComponent(
     modifier: Modifier = Modifier,
     size: Dp = 48.dp,
     strokeWidth: Dp = 4.dp,
-    spinnerColor: Color = Color.Blue,
-    trackColor: Color = Color.LightGray.copy(alpha = 0.35f),
+    spinnerColor: Color = Color.Blue.copy(0.55f),
+    trackColor: Color = Color.LightGray.copy(  0.35f),
 ) {
     Box(
         modifier
