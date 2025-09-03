@@ -18,6 +18,18 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for the Home screen.
+ *
+ * This ViewModel is responsible for managing the UI state of the home screen,
+ * handling user interactions, and fetching data related to cities. It uses Hilt for
+ * dependency injection to get the necessary use cases and a SavedStateHandle to
+ * persist the search query across process death.
+ *
+ * @param getCitiesUseCase Use case for fetching the initial list of all cities.
+ * @param searchCitiesUseCase Use case for filtering the list of cities based on a search query.
+ * @param savedStateHandle Handle to the saved state, used to restore the search query.
+ */
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getCitiesUseCase: GetCitiesUseCase,
