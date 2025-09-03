@@ -1,5 +1,19 @@
 package com.klivvr.citysearch.home.domain.model
 
+/**
+ * A Trie (prefix tree) data structure optimized for storing and searching for city names.
+ * This implementation allows for efficient prefix-based searches, returning a list of
+ * `CityModel` objects that match a given prefix.
+ *
+ * It is particularly useful for features like auto-complete or live search suggestions
+ * for city names. The structure handles cases where multiple cities might share the same
+ * name by storing them in a linked-list fashion within the corresponding Trie node.
+ *
+ * The main operations are:
+ * - `insert(word, city)`: Adds a city name and its associated `CityModel` object to the Trie.
+ * - `search(prefix)`: Finds all cities whose names start with the given prefix. The results
+ *   are sorted alphabetically by city name, and then by country name as a secondary criterion.
+ */
 class Trie {
     /**
      * Internal class representing a node in the Trie structure.
