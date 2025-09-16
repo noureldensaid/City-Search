@@ -11,19 +11,19 @@ class SearchCitiesUseCaseTest {
 
 
     private fun seed() = listOf(
-        CityModel(id = 1, name = "Cairo",      country = "EG", latitude = 30.0444, longitude = 31.2357, flagEmoji = "EG"),
-        CityModel(id = 2, name = "Cairopolis", country = "EG", latitude = 29.9000, longitude = 31.2000, flagEmoji = "EG"),
-        CityModel(id = 3, name = "Alexandria", country = "EG", latitude = 31.2001, longitude = 29.9187, flagEmoji = "EG"),
-        CityModel(id = 4, name = "Calgary",    country = "CA", latitude = 51.0447, longitude = -114.0719, flagEmoji = "CA"),
-        CityModel(id = 5, name = "cAi",        country = "US", latitude  = 40.7128,longitude = -74.0060, flagEmoji = "US"),
+        CityModel(id = 1, name = "Cairo",      country = "EG", latitude = 30.0444, longitude = 31.2357, flagEmoji = "EG",normalizedName = "cairo"),
+        CityModel(id = 2, name = "Cairopolis", country = "EG", latitude = 29.9000, longitude = 31.2000, flagEmoji = "EG", normalizedName = "cairopolis"),
+        CityModel(id = 3, name = "Alexandria", country = "EG", latitude = 31.2001, longitude = 29.9187, flagEmoji = "EG", normalizedName = "alexandria"),
+        CityModel(id = 4, name = "Calgary",    country = "CA", latitude = 51.0447, longitude = -114.0719, flagEmoji = "CA", normalizedName = "calgary"),
+        CityModel(id = 5, name = "cAi",        country = "US", latitude  = 40.7128,longitude = -74.0060, flagEmoji = "US", normalizedName = "cai"),
         )
 
     private fun seed2() = listOf(
-        CityModel(id = 6,  name = "Alabama",     country = "US", latitude = 0.0, longitude = 0.0, flagEmoji = "US"),
-        CityModel(id = 7,  name = "Albuquerque", country = "US", latitude = 0.0, longitude = 0.0, flagEmoji = "US"),
-        CityModel(id = 8,  name = "Anaheim",     country = "US", latitude = 0.0, longitude = 0.0, flagEmoji = "US"),
-        CityModel(id = 9,  name = "Arizona",     country = "US", latitude = 0.0, longitude = 0.0, flagEmoji = "US"),
-        CityModel(id = 10, name = "Sydney",      country = "AU", latitude = 0.0, longitude = 0.0, flagEmoji = "AU"),
+        CityModel(id = 6,  name = "Alabama",     country = "US", latitude = 0.0, longitude = 0.0, flagEmoji = "US", normalizedName = "alabama"),
+        CityModel(id = 7,  name = "Albuquerque", country = "US", latitude = 0.0, longitude = 0.0, flagEmoji = "US", normalizedName = "albuquerque"),
+        CityModel(id = 8,  name = "Anaheim",     country = "US", latitude = 0.0, longitude = 0.0, flagEmoji = "US", normalizedName = "anaheim"),
+        CityModel(id = 9,  name = "Arizona",     country = "US", latitude = 0.0, longitude = 0.0, flagEmoji = "US", normalizedName = "arizona"),
+        CityModel(id = 10, name = "Sydney",      country = "AU", latitude = 0.0, longitude = 0.0, flagEmoji = "AU", normalizedName = "sydney"),
         )
 
     @Test

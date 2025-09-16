@@ -31,15 +31,13 @@ import com.klivvr.citysearch.core.presentation.components.DefaultSearchTextField
 import com.klivvr.citysearch.core.presentation.ui.theme.GreyBorder
 import com.klivvr.citysearch.core.presentation.ui.theme.PrimaryBackground
 import com.klivvr.citysearch.core.presentation.ui.theme.PrimaryText
-import com.klivvr.citysearch.core.utils.toFlagEmoji
 import com.klivvr.citysearch.core.utils.toReadableString
 import com.klivvr.citysearch.home.domain.model.CityModel
-import com.klivvr.citysearch.home.presentation.components.CityListRail
 import com.klivvr.citysearch.home.domain.model.CitySection
+import com.klivvr.citysearch.home.presentation.components.CityListRail
 import com.klivvr.citysearch.home.presentation.model.HomeScreenEvent
 import com.klivvr.citysearch.home.presentation.model.HomeScreenState
 import kotlinx.collections.immutable.persistentListOf
-import kotlin.collections.listOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
