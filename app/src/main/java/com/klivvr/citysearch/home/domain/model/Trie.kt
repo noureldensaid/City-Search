@@ -1,108 +1,77 @@
 package com.klivvr.citysearch.home.domain.model
 
+
 /**
- * A Trie (prefix tree) data structure optimized for storing and searching for city names.
- * This implementation allows for efficient prefix-based searches, returning a list of
- * `CityModel` objects that match a given prefix.
+ * A Trie (prefix tree) data structure optimized for searching city names.
  *
- * It is particularly useful for features like auto-complete or live search suggestions
- * for city names. The structure handles cases where multiple cities might share the same
- * name by storing them in a linked-list fashion within the corresponding Trie node.
+ * This implementation is designed to provide efficient prefix-based search over a list of [CityModel] objects.
+ * Instead of storing the city objects directly within the trie nodes, it stores integer indices
+ * that correspond to the city's position in the original list provided at construction. This approach
+ * avoids circular references and keeps the domain models immutable.
  *
- * The main operations are:
- * - `insert(word, city)`: Adds a city name and its associated `CityModel` object to the Trie.
- * - `search(prefix)`: Finds all cities whose names start with the given prefix. The results
- *   are sorted alphabetically by city name, and then by country name as a secondary criterion.
+ * The primary operations are [insert] to build the trie and [search] to find all cities
+ * matching a given prefix. Search results are automatically sorted to ensure a stable and
+ * predictable UI display.
+ *
+ * It is expected that the words inserted into the trie are pre-processed (e.g., lowercased).
+ *
+ * @param cities The complete list of [CityModel] objects that this trie will index. This list
+ *               is held by reference to retrieve city data from the found indices.
  */
-class Trie {
-    /**
-     * Internal class representing a node in the Trie structure.
-     */
-    private class TrieNode {
-        // Maps each character to its corresponding child node
-        val children: MutableMap<Char, TrieNode> = mutableMapOf()
+class Trie(private val cities: List<CityModel>) {
 
-        // Flag to indicate if the node represents the end of a word
-        var isEndOfWord: Boolean = false
+    private class Node(
+        val children: MutableMap<Char, Node> = HashMap(),
+        var isEndOfWord: Boolean = false,
+        // store indices into `cities` list; may contain multiple cities for same word
+        val cityIndices: MutableList<Int> = mutableListOf()
+    )
 
-        // Reference to the City object associated with the word
-        var city: CityModel? = null
-    }
-
-    // The root node of the Trie
-    private val root = TrieNode()
+    private val root = Node()
 
     /**
-     * Inserts a word and its corresponding city information into the Trie.
-     *
-     * @param word The word to be inserted.
-     * @param city The City object containing information about the associated city.
+     * Insert a word (already normalized/lowercased) with its city index.
      */
-    fun insert(word: String, city: CityModel) {
-
+    fun insert(word: String, index: Int) {
         var node = root
-        // Insert each character of the word into the Trie
-
-        for (char in word) {
-            // Uses getOrPut to retrieve an existing child node for the character or create a new one.
-            node = node.children.getOrPut(char) { TrieNode() }
+        for (ch in word) {
+            node = node.children.getOrPut(ch) { Node() }
         }
-        // Marks the last node as the end of a word and sets the associated city
         node.isEndOfWord = true
-
-        // If the last node already has a city, append the new city to the linked list
-        if (node.city == null) {
-            node.city = city
-        } else {
-            var current = node.city
-            while (current?.nextCity != null) {
-                current = current.nextCity
-            }
-            current?.nextCity = city
-
-        }
+        node.cityIndices.add(index)
     }
 
     /**
-     * Searches for all cities associated with a given prefix.
-     *
-     * @param prefix The prefix to search for.
-     * @return A list of City objects associated with the prefix, or an empty list if no matches are found.
+     * Search by prefix (assumed already trimmed/lowercased).
+     * Returns cities sorted by name then country to keep UI stable.
      */
     fun search(prefix: String): List<CityModel> {
+        if (prefix.isEmpty()) return emptyList()
+
         var node = root
-        // Traverse the Trie to find the last node corresponding to the prefix
-        for (char in prefix) {
-            // If the character is not found in the Trie, return an empty list
-            //  the
-            node = node.children[char] ?: return emptyList()
+        for (ch in prefix) {
+            node = node.children[ch] ?: return emptyList()
         }
-        // Collect all cities associated with the last node and its descendants
-        return collectAllWords(node).sortedWith(compareBy({ it.name }, { it.country }))
+
+        // collect all indices under this subtree
+        val indices = collectIndices(node, mutableListOf())
+        if (indices.isEmpty()) return emptyList()
+
+        // map indices to models and sort
+        return indices
+            .asSequence()
+            .map { cities[it] }
+            .sortedWith(compareBy(CityModel::name, CityModel::country))
+            .toList()
     }
 
-
-    /**
-     * Helper function to collect all cities associated with a node and its descendants.
-     *
-     * @param node The Trie node to start the search from.
-     * @return A list of City objects associated with the node and its descendants.
-     */
-    private fun collectAllWords(node: TrieNode): List<CityModel> {
-        val cities = mutableListOf<CityModel>()
-        // If the node is a word, add it to the list
-        if (node.isEndOfWord) {
-            var current = node.city
-            while (current != null) {
-                cities.add(current)
-                current = current.nextCity
-            }
+    private fun collectIndices(node: Node, out: MutableList<Int>): MutableList<Int> {
+        if (node.isEndOfWord && node.cityIndices.isNotEmpty()) {
+            out.addAll(node.cityIndices)
         }
-        // Recursively collect cities from child nodes
         for (child in node.children.values) {
-            cities.addAll(collectAllWords(child))
+            collectIndices(child, out)
         }
-        return cities
+        return out
     }
-
 }

@@ -35,9 +35,11 @@ import com.klivvr.citysearch.core.utils.toFlagEmoji
 import com.klivvr.citysearch.core.utils.toReadableString
 import com.klivvr.citysearch.home.domain.model.CityModel
 import com.klivvr.citysearch.home.presentation.components.CityListRail
+import com.klivvr.citysearch.home.domain.model.CitySection
 import com.klivvr.citysearch.home.presentation.model.HomeScreenEvent
 import com.klivvr.citysearch.home.presentation.model.HomeScreenState
 import kotlinx.collections.immutable.persistentListOf
+import kotlin.collections.listOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,12 +111,12 @@ fun HomeScreenRoot(
             contentAlignment = Alignment.Center
         ) {
             when {
-                state.isLoading && state.data.isEmpty() -> DefaultLoadingComponent()
+                state.isLoading && state.sections.isEmpty() -> DefaultLoadingComponent()
 
-                !state.isLoading && state.data.isEmpty() -> DefaultEmptyState()
+                !state.isLoading && state.sections.isEmpty() -> DefaultEmptyState()
 
                 else -> CityListRail(
-                    data = state.data,
+                    sections = state.sections,
                     onClick = { onEvent(HomeScreenEvent.OnCityClick(it)) },
                     modifier = Modifier.fillMaxSize()
                 )
@@ -131,31 +133,30 @@ fun HomeScreenComponentPreview() {
         snackbarHostState = SnackbarHostState(),
         state = HomeScreenState(
             isLoading = false,
-            data = persistentListOf(
-                CityModel(
-                    id = 1,
-                    country = "UA",
-                    name = "New York",
-                    latitude = 46.7128,
-                    longitude = -73.0060,
-                    flagEmoji = "Us".toFlagEmoji()
-                ),
-                CityModel(
-                    id = 2,
-                    country = "UA",
-                    name = "New York",
-                    latitude = 40.7128,
-                    longitude = -74.0060,
-                    flagEmoji = "Us".toFlagEmoji()
-                ),
-                CityModel(
-                    id = 5,
-                    country = "UA",
-                    name = "California",
-                    latitude = 41.7128,
-                    longitude = -75.0060,
-                    flagEmoji = "Us".toFlagEmoji()
-                ),
+            sections = persistentListOf(
+                CitySection(
+                    letter = 'A',
+                    items = listOf(
+                        CityModel(
+                            id = 1,
+                            name = "Amsterdam",
+                            country = "Netherlands",
+                            latitude = 52.3676,
+                            longitude = 4.9041,
+                            flagEmoji = "🇳🇱",
+                            normalizedName = "amsterdam",
+                        ),
+                        CityModel(
+                            id = 2,
+                            name = "Athens",
+                            country = "Greece",
+                            latitude = 37.9838,
+                            longitude = 23.7275,
+                            flagEmoji = "🇬🇷",
+                            normalizedName = "athens",
+                        )
+                    )
+                )
             )
         )
     ) {}
