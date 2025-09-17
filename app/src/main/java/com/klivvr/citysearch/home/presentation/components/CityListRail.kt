@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,32 +25,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.klivvr.citysearch.core.presentation.ui.theme.GreyBorder
 import com.klivvr.citysearch.home.domain.model.CityModel
+import com.klivvr.citysearch.home.domain.model.CitySection
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CityListRail(
     modifier: Modifier = Modifier,
-    data: List<CityModel>,
+    sections: List<CitySection>,
     onClick: (CityModel) -> Unit,
 ) {
-    val grouped = remember(data) {
-        val map = linkedMapOf<Char, MutableList<CityModel>>()
-        data.forEach { city ->
-            val key = city.name.first()
-            map.getOrPut(key) { mutableListOf() }.add(city)
-        }
-        map
-    }
-    val firstLetter = grouped.keys.firstOrNull()
-    val lastLetter = grouped.keys.lastOrNull()
+
+    val firstLetter = sections.firstOrNull()?.letter
+    val lastLetter = sections.lastOrNull()?.letter
 
     LazyColumn(
         modifier = modifier,
         horizontalAlignment = Alignment.Start
     ) {
-        grouped.forEach { (letter, cities) ->
+        sections.forEach { section ->
+            val letter = section.letter
+            val cities = section.items
 
-            stickyHeader(key = letter) {
+            stickyHeader(key = "hdr_$letter") {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -59,14 +54,20 @@ fun CityListRail(
                         .size(48.dp)
                         .border(1.dp, GreyBorder, CircleShape)
                         .background(color = Color.White, shape = CircleShape)
-                ) { Text(text = letter.toString(), fontSize = 14.sp, fontWeight = FontWeight.Bold) }
+                ) {
+                    Text(
+                        text = letter.toString(),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
 
             itemsIndexed(
                 items = cities,
-                key = { _, city -> city.id }
+                key = { _, city -> city.id },                 // stable keys
+                contentType = { _, _ -> "city_row" }          // helps recycling
             ) { idxInSection, city ->
-
                 val isFirstInSection = idxInSection == 0
                 val isLastInSection = idxInSection == cities.lastIndex
                 val isFirstOverall = (letter == firstLetter && isFirstInSection)
@@ -102,33 +103,32 @@ fun CityListRail(
 @Composable
 fun CityListRailPreview() {
     val data = listOf(
-        CityModel(
-            id = 1,
-            name = "Amsterdam",
-            country = "Netherlands",
-            latitude = 52.37,
-            longitude = 4.89,
-            flagEmoji = "🇳🇱"
-        ),
-        CityModel(
-            id = 2,
-            name = "Ankara",
-            country = "Turkey",
-            latitude = 39.92,
-            longitude = 32.85,
-            flagEmoji = "🇹🇷"
-        ),
-        CityModel(
-            id = 3,
-            name = "Berlin",
-            country = "Germany",
-            latitude = 52.52,
-            longitude = 13.40,
-            flagEmoji = "🇩🇪"
-        ),
+        CitySection(
+            letter = 'A',
+            items = listOf(
+                CityModel(
+                    id = 1,
+                    name = "Amsterdam",
+                    country = "Netherlands",
+                    latitude = 52.3676,
+                    longitude = 4.9041,
+                    flagEmoji = "🇳🇱",
+                    normalizedName = "amsterdam",
+                ),
+                CityModel(
+                    id = 2,
+                    name = "Athens",
+                    country = "Greece",
+                    latitude = 37.9838,
+                    longitude = 23.7275,
+                    flagEmoji = "🇬🇷",
+                    normalizedName = "athens",
+                )
+            )
+        )
     )
     CityListRail(
-        data = data,
+        sections = data,
         onClick = {}
     )
 }

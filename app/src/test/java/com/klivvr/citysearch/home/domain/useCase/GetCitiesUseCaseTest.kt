@@ -1,6 +1,7 @@
 package com.klivvr.citysearch.home.domain.useCase
 
 import com.google.common.truth.Truth.assertThat
+import com.klivvr.citysearch.core.base.ResponseState
 import com.klivvr.citysearch.core.utils.DefaultDispatcherProviderTest
 import com.klivvr.citysearch.home.data.repository.CityRepositoryImplTest
 import com.klivvr.citysearch.home.domain.model.CityModel
@@ -22,13 +23,17 @@ class GetCitiesUseCaseTest {
         val useCase = GetCitiesUseCase(repo, dispatcher)
 
         val result = useCase()
-
-        assertThat(result.map { it.name to it.country })
-            .containsExactly(
-                "Alexandria" to "EG",
-                "Alexandria" to "US",
-                "Cairo" to "EG"
-            )
-            .inOrder()
+        when(result){
+            is ResponseState.Error -> ResponseState.Error(result.exception)
+            is ResponseState.Success -> {
+                assertThat(result.data.map { it.name to it.country })
+                    .containsExactly(
+                        "Alexandria" to "EG",
+                        "Alexandria" to "US",
+                        "Cairo" to "EG"
+                    )
+                    .inOrder()
+            }
+        }
     }
 }

@@ -97,7 +97,8 @@ private fun CityCardPreview() {
             name = "New York",
             latitude = 40.7128,
             longitude = -74.0060,
-            flagEmoji = "Us".toFlagEmoji()
+            flagEmoji = "Us".toFlagEmoji(),
+            normalizedName = "new york"
         ),
     ) {}
 }
