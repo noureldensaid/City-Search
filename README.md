@@ -34,8 +34,8 @@ This enables fast, efficient, and scalable prefix-based lookups.
 6. Let Gradle sync, then **Run** the app
 
 ## ScreenShots
-<img width="1209" height="2553" alt="1" src="https://github.com/user-attachments/assets/e78a32f2-3d62-4b92-a0e1-d01284423a0d" />
-<img width="1209" height="2553" alt="2" src="https://github.com/user-attachments/assets/76b4b18f-6072-4298-a88f-e7dc2b4ebe78" />
-<img width="1209" height="2553" alt="4" src="https://github.com/user-attachments/assets/de8c7415-e72b-436c-b081-a9fa2c0b577b" />
+<img width="300" alt="1" src="https://github.com/user-attachments/assets/e78a32f2-3d62-4b92-a0e1-d01284423a0d" />
+<img width="300" alt="2" src="https://github.com/user-attachments/assets/76b4b18f-6072-4298-a88f-e7dc2b4ebe78" />
+<img width="300" alt="4" src="https://github.com/user-attachments/assets/de8c7415-e72b-436c-b081-a9fa2c0b577b" />
 <img width="2553" height="1209" alt="3" src="https://github.com/user-attachments/assets/a582ecba-6349-4ace-977c-ee80a0bb11d2" />
 
