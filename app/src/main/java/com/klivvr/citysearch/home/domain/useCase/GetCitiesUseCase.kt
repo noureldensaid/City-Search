@@ -1,10 +1,8 @@
 package com.klivvr.citysearch.home.domain.useCase
 
 import com.klivvr.citysearch.core.base.ResponseState
-import com.klivvr.citysearch.core.utils.DispatcherProvider
 import com.klivvr.citysearch.home.domain.model.CityModel
 import com.klivvr.citysearch.home.domain.repository.CityRepository
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,30 +12,27 @@ import javax.inject.Singleton
  *
  * This class acts as an intermediary between the presentation layer (e.g., a ViewModel)
  * and the data layer (the [CityRepository]). It encapsulates the business logic for
- * fetching the full list of cities from the repository. The operation is executed
- * on a background thread managed by the provided [DispatcherProvider] to avoid
- * blocking the main thread.
+ * fetching the full list of cities from the repository.
+ *
+ * The repository already handles dispatching to the appropriate thread (IO), so this
+ * use case simply delegates the call without additional context switching to avoid
+ * unnecessary dispatcher hopping.
  *
  * The result is wrapped in a [ResponseState] to handle both success and error states gracefully.
  *
  * @property repo The [CityRepository] instance used to access the city data.
- * @property dispatcher The [DispatcherProvider] used to switch coroutine contexts, ensuring
- *           the data fetching occurs on an appropriate background thread.
  */
 @Singleton
 class GetCitiesUseCase @Inject constructor(
-    private val repo: CityRepository,
-    private val dispatcher: DispatcherProvider
+    private val repo: CityRepository
 ) {
-    suspend operator fun invoke(): ResponseState<List<CityModel>> =
-        withContext(dispatcher.default) {
-            val response = repo.loadAll()
-            when (response) {
-                is ResponseState.Error -> ResponseState.Error(response.exception)
-                is ResponseState.Success -> {
-                    val cities = response.data
-                     ResponseState.Success(cities)
-                }
-            }
-        }
+    /**
+     * Retrieves all cities from the repository.
+     *
+     * @return A [ResponseState] containing either the list of cities on success,
+     *         or an exception on failure.
+     */
+    suspend operator fun invoke(): ResponseState<List<CityModel>> {
+        return repo.loadAll()
+    }
 }

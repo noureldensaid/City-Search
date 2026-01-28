@@ -31,8 +31,21 @@ class Trie(private val cities: List<CityModel>) {
 
     /**
      * Insert a word (already normalized/lowercased) with its city index.
+     *
+     * @param word The normalized search term (e.g., city name in lowercase).
+     *             Must not be empty.
+     * @param index The index of the city in the [cities] list.
+     *              Must be a valid index within the cities list bounds.
+     * @throws IllegalArgumentException if word is empty or index is out of bounds.
      */
     fun insert(word: String, index: Int) {
+        require(word.isNotEmpty()) {
+            "Cannot insert empty word into Trie"
+        }
+        require(index in cities.indices) {
+            "Invalid city index: $index. Must be between 0 and ${cities.size - 1}"
+        }
+
         var node = root
         for (ch in word) {
             node = node.children.getOrPut(ch) { Node() }
@@ -44,6 +57,11 @@ class Trie(private val cities: List<CityModel>) {
     /**
      * Search by prefix (assumed already trimmed/lowercased).
      * Returns cities sorted by name then country to keep UI stable.
+     *
+     * @param prefix The search prefix (e.g., "par" to find "Paris", "Parma", etc.).
+     *               Must not be empty - use empty check before calling.
+     * @return A list of matching [CityModel] objects, sorted by name and country.
+     *         Returns empty list if no matches found or prefix is invalid.
      */
     fun search(prefix: String): List<CityModel> {
         if (prefix.isEmpty()) return emptyList()
@@ -65,6 +83,9 @@ class Trie(private val cities: List<CityModel>) {
             .toList()
     }
 
+    /**
+     * Recursively collects all city indices from this node and its descendants.
+     */
     private fun collectIndices(node: Node, out: MutableList<Int>): MutableList<Int> {
         if (node.isEndOfWord && node.cityIndices.isNotEmpty()) {
             out.addAll(node.cityIndices)
@@ -74,4 +95,10 @@ class Trie(private val cities: List<CityModel>) {
         }
         return out
     }
+
+    /**
+     * Returns the number of cities indexed in this Trie.
+     * Useful for debugging and monitoring.
+     */
+    fun size(): Int = cities.size
 }

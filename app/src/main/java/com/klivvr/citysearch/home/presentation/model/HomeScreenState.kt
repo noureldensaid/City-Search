@@ -20,7 +20,6 @@ import kotlinx.collections.immutable.persistentListOf
 @Stable
 data class HomeScreenState(
     val isLoading: Boolean = true,
-//    val data: PersistentList<CityModel> = persistentListOf(),
     val searchQuery: String = "",
     val citiesCount: Int = 0,
     val sections : PersistentList<CitySection> = persistentListOf()

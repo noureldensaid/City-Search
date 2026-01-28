@@ -4,10 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -84,15 +87,16 @@ fun HomeScreenRoot(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(80.dp)
+                    .height(50.dp + WindowInsets.systemBars.asPaddingValues().calculateBottomPadding())
                     .background(Color.White)
-                    .border(width = 1.dp, color = GreyBorder),
-                contentAlignment = Alignment.Center
+                    .border(width = 1.dp, color = GreyBorder)
+                ,
+                contentAlignment = Alignment.TopCenter
             ) {
                 DefaultSearchTextField(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 20.dp),
+                        .padding(16.dp),
                     initialSearchText = state.searchQuery,
                     debounceTime = 0L,
                     onSearch = {

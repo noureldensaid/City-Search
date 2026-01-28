@@ -2,7 +2,6 @@ package com.klivvr.citysearch.home.domain.useCase
 
 import com.google.common.truth.Truth.assertThat
 import com.klivvr.citysearch.core.base.ResponseState
-import com.klivvr.citysearch.core.utils.DefaultDispatcherProviderTest
 import com.klivvr.citysearch.home.data.repository.CityRepositoryImplTest
 import com.klivvr.citysearch.home.domain.model.CityModel
 import kotlinx.coroutines.test.runTest
@@ -19,8 +18,7 @@ class GetCitiesUseCaseTest {
                 CityModel(3, "Alexandria", "EG", 0.0, 0.0, "EG" , "alexandria")
             )
         )
-        val dispatcher = DefaultDispatcherProviderTest(testScheduler)
-        val useCase = GetCitiesUseCase(repo, dispatcher)
+        val useCase = GetCitiesUseCase(repo)
 
         val result = useCase()
         when(result){
