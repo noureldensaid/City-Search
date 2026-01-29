@@ -3,6 +3,7 @@ package com.klivvr.citysearch.home.domain.model
 
 /**
  * A Trie (prefix tree) data structure optimized for searching city names.
+ * Trie performance: For prefix search on large datasets, Trie's O(m+k) is objectively faster than O(n) linear scan
  *
  * This implementation is designed to provide efficient prefix-based search over a list of [CityModel] objects.
  * Instead of storing the city objects directly within the trie nodes, it stores integer indices
