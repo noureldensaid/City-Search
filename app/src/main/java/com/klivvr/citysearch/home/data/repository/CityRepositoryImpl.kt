@@ -46,7 +46,6 @@ class CityRepositoryImpl @Inject constructor(
                 val dto = json.decodeFromStream(ListSerializer(CityDto.serializer()), input)
                 val domain = cityMapper.map(dto)
                     .sortedWith(compareBy(CityModel::normalizedName, CityModel::country))
-                    .distinctBy { it.normalizedName to it.country }
                 ResponseState.Success(domain)
             }
         }.getOrElse {
