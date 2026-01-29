@@ -20,7 +20,7 @@ City Search uses a **Trie (prefix tree)** data structure to optimize searching b
 This enables fast, efficient, and scalable prefix-based lookups.
 
 **Why Trie?**
-- **Efficient Lookups** – Search complexity is **O(m)**, where `m` is the length of the search prefix.
+- **Efficient Lookups** - Trie performance: For prefix search on large datasets, Trie's O(m+k) is objectively faster than O(n) linear scan
 - **Memory Friendly** – Common prefixes are stored only once, reducing redundancy.
 - **Scalability** – Handles large datasets of cities without sacrificing performance.
 
